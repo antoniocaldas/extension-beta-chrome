@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Composer IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="header-brand">
+      <img src="./icons/composer-ia.png" alt="composer-ia" />
+    </header>
+    <main class="popup">
+      <div class="main-content">
+        <section class="box section-content">
+          <!-- <button class="tab-button get-content">
+            <img
+              src="./icons/get-data.png"
+              class="icons"
+              alt="obtener data"
+            />OBTENER CONTENIDO
+          </button> -->
+          <h2>Contenido original</h2>
+          <textarea
+            id="content"
+            placeholder="Aquí aparecerá el contenido de la nota..."
+            disabled="true"
+          ></textarea>
+        </section>
+        <section class="box section-content">
+          <button class="tab-button generate-ia">
+            <img
+              src="./icons/varita-magica.png"
+              class="icons"
+              alt="varita mágica"
+            />GENERAR IA
+          </button>
+          <div>
+            <ul class="tabs">
+              <li class="tab-item active" data-tab-target="#spelling">
+                Texto corregido
+              </li>
+              <li class="tab-item" data-tab-target="#tags">Tags generados</li>
+              <li class="tab-item" data-tab-target="#seo">Contenido SEO</li>
+              <li class="tab-item" data-tab-target="#suggested">
+                Noticias sugeridas
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div
+                id="spelling"
+                class="textarea-style active"
+                contenteditable="false"
+                data-tab-content
+              ></div>
+              <div id="tags" class="tags-container" data-tab-content>
+                <div class="textarea-style tags-content"></div>
+                <button
+                  class="copy-tags-button"
+                  title="Los tags se pegarán en el campo de tags de Composer"
+                >
+                  Agregar tags
+                </button>
+              </div>
+              <div
+                id="seo"
+                class="textarea-style"
+                contenteditable="false"
+                data-tab-content
+              ></div>
+              <div
+                id="suggested"
+                class="textarea-style"
+                contenteditable="false"
+                data-tab-content
+              ></div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <h3 class="error-message"></h3>
+      <h3 class="loading">Validando credenciales...</h3>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

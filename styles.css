@@ -1,0 +1,239 @@
+:root {
+  --primary-color: #3477db;
+  --secondary-color: #22a85a;
+
+  --gray-color: #eff1ef;
+  --white-color: #fff;
+  --border-radius: 10px;
+  --black-color: #010101;
+}
+
+/* ESTO debe desaparecer */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--gray-color);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: var(--border-radius);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #919191;
+  border-radius: var(--border-radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777777;
+}
+
+.header-brand {
+  background-color: #000;
+}
+
+.header-brand img {
+  width: 100%;
+  height: 80px;
+  object-fit: contain;
+}
+
+.popup {
+  width: 500px;
+  height: auto;
+  padding: 10px 12px 0px 12px;
+}
+
+.main-content {
+  display: none;
+}
+
+.main-content.show {
+  display: block;
+}
+
+.error-message {
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+  font: 400 14px/20px "Poppins";
+  color: #cc0808;
+  text-align: center;
+  margin: 10px auto 20px;
+}
+
+.loading {
+  display: none;
+}
+
+.loading.show {
+  display: block;
+  font: 400 14px/20px "Poppins";
+  color: #464646;
+  text-align: center;
+  margin: 10px auto 20px;
+}
+
+.box {
+  background-color: var(--white-color);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+}
+
+textarea,
+.textarea-style {
+  font: 300 14px/18px "Poppins";
+  resize: none;
+  width: 100%;
+  height: 105px;
+  field-sizing: content;
+  max-height: 105px;
+  border: 1px solid #cecece;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  overflow-y: auto;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 45px;
+  font: 600 16px/18px "Poppins";
+  color: var(--black-color);
+  transition: 0.5s;
+  background-size: 200% auto;
+  box-shadow: 0 0 20px #eee;
+  border-radius: var(--border-radius);
+  position: relative;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-button:hover {
+  background-position: right center;
+  color: var(--black-color);
+  text-decoration: none;
+}
+
+.tab-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.13);
+  transform: skewX(-45deg);
+  transition: all 0.5s ease;
+}
+
+.tab-button:hover::before {
+  left: 100%;
+}
+
+.get-content,
+.generate-ia {
+  background-image: linear-gradient(
+    to right,
+    #ffcb05 0%,
+    #ffcb05 50%,
+    #ebd936 100%
+  );
+}
+
+.generate-ia:disabled,
+.get-content:disabled,
+.copy-tags-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.tabs {
+  display: flex;
+  gap: 1px;
+  width: 100%;
+  list-style-type: none;
+  background-color: #eff1ef;
+  border-radius: var(--border-radius);
+  padding: 4px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.tab-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: 600 12px/14px "Poppins";
+  color: var(--black-color);
+  background-color: transparent;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: all 0.4s ease;
+  flex: 1;
+}
+
+.tab-item.active {
+  background: #000;
+  color: #fff;
+}
+
+[data-tab-content] {
+  display: none;
+}
+
+.active[data-tab-content] {
+  display: block;
+}
+
+.icons {
+  width: 25px;
+  height: 25px;
+}
+
+.tags-container {
+  position: relative;
+}
+
+.copy-tags-button {
+  font: 600 12px/14px "Poppins";
+  background-color: #1a1d3c;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--border-radius);
+}
+
+.suggested-news-link {
+  color: #3da9b5;
+}
