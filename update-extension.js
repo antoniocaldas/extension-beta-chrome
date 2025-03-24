@@ -3,14 +3,61 @@ const https = require("https");
 const path = require("path");
 
 // 🔹 URLs RAW de los archivos en GitHub (o cualquier otra fuente pública)
+const VERSION_URL =
+  "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/manifest.json";
 const FILES_TO_UPDATE = {
-  "script.js": "",
-  "style.css": "",
-  "popup.html": "",
+  "script.js":
+    "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/script.js",
+  "style.css":
+    "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/styles.css",
+  "popup.html":
+    "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/popup.html",
 };
 
 // 📂 Carpeta donde están los archivos de la extensión
 const EXTENSION_FOLDER = __dirname; // Cambia esto si tu estructura es diferente
+
+async function checkForUpdate() {
+  try {
+    console.log("🔍 Verificando actualizaciones...");
+
+    // 📝 Obtiene la última versión publicada
+    const versionData = await fetchJSON(VERSION_URL);
+    const currentVersion = getCurrentVersion();
+    const latestVersion = versionData.version;
+
+    if (currentVersion !== latestVersion) {
+      console.log(`🚀 Nueva versión disponible: ${latestVersion}`);
+      await updateFiles();
+    } else {
+      console.log("✅ La extensión ya está actualizada.");
+    }
+  } catch (error) {
+    console.error("❌ Error al verificar la actualización:", error);
+  }
+}
+function getCurrentVersion() {
+  const manifestPath = path.join(EXTENSION_FOLDER, "manifest.json");
+
+  if (fs.existsSync(manifestPath)) {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+    return manifest.version;
+  }
+  return "0.0.0";
+}
+
+// 🔄 Obtiene un JSON remoto
+async function fetchJSON(url) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        let data = "";
+        res.on("data", (chunk) => (data += chunk));
+        res.on("end", () => resolve(JSON.parse(data)));
+      })
+      .on("error", reject);
+  });
+}
 
 async function updateFile(fileName, fileUrl) {
   return new Promise((resolve, reject) => {
@@ -53,4 +100,4 @@ async function updateFiles() {
 }
 
 // 🚀 Ejecutar actualización
-updateFiles();
+checkForUpdate();
