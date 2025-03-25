@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Cargar assets iniciales desde chrome.storage
 loadAssets();
 
@@ -48,3 +49,18 @@ function updateScript(jsContent) {
   script.textContent = jsContent;
   document.body.appendChild(script);
 }
+=======
+chrome.storage.local.get(["script.js", "styles.css"], (data) => {
+  if (data["script.js"]) {
+    const script = document.createElement("script");
+    script.textContent = data["script.js"];
+    document.body.appendChild(script);
+  }
+
+  if (data["styles.css"]) {
+    const style = document.createElement("style");
+    style.textContent = data["styles.css"];
+    document.head.appendChild(style);
+  }
+});
+>>>>>>> main-beta
