@@ -13,4 +13,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
   //console.log("Prueba de actualizacion");
+  //console.log('Ahora actualizate')
 });

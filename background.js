@@ -55,14 +55,29 @@ async function checkForUpdate() {
 
 // 📢 Notificar a los content scripts activos para que recarguen el CSS y JS
 function notifyContentScripts() {
-  chrome.tabs.query({}, (tabs) => {
-    for (let tab of tabs) {
-      if (tab.id) {
-        chrome.tabs.sendMessage(tab.id, { action: "reloadAssets" });
+    chrome.tabs.query({}, (tabs) => {
+      for (let tab of tabs) {
+        if (tab.id) {
+          // 🔹 Inyectar content.js manualmente si no está cargado
+          chrome.scripting.executeScript(
+            {
+              target: { tabId: tab.id },
+              files: ["content.js"],
+            },
+            () => {
+              chrome.tabs.sendMessage(tab.id, { action: "reloadAssets" }, (response) => {
+                if (chrome.runtime.lastError) {
+                  console.warn("⚠️ No se pudo enviar mensaje a content.js:", chrome.runtime.lastError);
+                } else {
+                  console.log("✅ Mensaje enviado a content.js");
+                }
+              });
+            }
+          );
+        }
       }
-    }
-  });
-}
+    });
+  }
 
 // 📩 Escuchar mensaje desde popup.html para forzar actualización
 chrome.runtime.onMessage.addListener((request) => {
