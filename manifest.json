@@ -7,16 +7,7 @@
     "default_popup": "popup.html",
     "default_icon": "./icons/composer-icon.png"
   },
-<<<<<<< HEAD
-  "permissions": [
-      "storage",
-      "activeTab",
-      "scripting",
-      "downloads"
-  ],
-=======
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
->>>>>>> main-beta
   "background": {
     "service_worker": "background.js"
   },
