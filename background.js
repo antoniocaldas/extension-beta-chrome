@@ -41,6 +41,17 @@ async function updateFiles() {
       const content = await fetch(fileUrl).then(res => res.text());
       await saveFileToStorage(fileName, content);
     }
+
+    // 🔥 Notificar a todas las pestañas que recarguen los recursos
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: "NEW_UPDATE_AVAILABLE",
+          files: Object.keys(FILES_TO_UPDATE)
+        }).catch(() => {}); // Ignora errores en pestañas sin content script
+      });
+    });
+
   } catch (error) {
     console.error('❌ Error al actualizar archivos:', error);
     throw error;
