@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Composer IA",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Una extensión para corregir la ortografía y generar tags.",
   "action": {
       "default_popup": "popup.html",

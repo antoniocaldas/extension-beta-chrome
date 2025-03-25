@@ -242,4 +242,6 @@ textarea,
   color: #fff;
   background-color: #3477db;
   font-size: 16px;
+  font-weight: 700;
+  border-radius: 10px;
 }
