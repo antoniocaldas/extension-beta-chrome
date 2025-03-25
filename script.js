@@ -12,5 +12,5 @@ document.addEventListener("DOMContentLoaded", async () => {
       target.classList.add("active");
     });
   });
-  console.log("Prueba de actualizacion");
+  //console.log("Prueba de actualizacion");
 });

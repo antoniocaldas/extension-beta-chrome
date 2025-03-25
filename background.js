@@ -18,6 +18,7 @@ async function fetchText(url) {
   }
 }
 
+// 🔍 Verificar si hay una actualización disponible
 async function checkForUpdate() {
   console.log("🔍 Verificando actualizaciones...");
 
@@ -41,6 +42,7 @@ async function checkForUpdate() {
 
         chrome.storage.local.set(updates, () => {
           console.log("✅ Archivos actualizados en chrome.storage");
+          notifyContentScripts(); // 🔄 Notificar a content.js
         });
       } else {
         console.log("✅ La extensión ya está actualizada.");
@@ -51,12 +53,23 @@ async function checkForUpdate() {
   }
 }
 
-// Escucha el mensaje desde el popup
+// 📢 Notificar a los content scripts activos para que recarguen el CSS y JS
+function notifyContentScripts() {
+  chrome.tabs.query({}, (tabs) => {
+    for (let tab of tabs) {
+      if (tab.id) {
+        chrome.tabs.sendMessage(tab.id, { action: "reloadAssets" });
+      }
+    }
+  });
+}
+
+// 📩 Escuchar mensaje desde popup.html para forzar actualización
 chrome.runtime.onMessage.addListener((request) => {
   if (request.action === "updateExtension") {
     checkForUpdate();
   }
 });
 
-// Ejecutar la verificación al iniciar
+// 🚀 Ejecutar la verificación al iniciar
 checkForUpdate();
