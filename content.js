@@ -1,29 +1,50 @@
-chrome.runtime.onMessage.addListener((request) => {
-    if (request.action === "reloadAssets") {
-      chrome.storage.local.get(["styles.css", "script.js"], (data) => {
-        // 🔹 ACTUALIZAR CSS
-        if (data["styles.css"]) {
-          let oldStyle = document.getElementById("custom-style");
-          if (oldStyle) oldStyle.remove();
-  
-          const style = document.createElement("style");
-          style.id = "custom-style";
-          style.textContent = data["styles.css"];
-          document.head.appendChild(style);
-          console.log("✅ CSS actualizado dinámicamente.");
-        }
-  
-        // 🔹 ACTUALIZAR JS
-        if (data["script.js"]) {
-          let oldScript = document.getElementById("custom-script");
-          if (oldScript) oldScript.remove();
-  
-          const script = document.createElement("script");
-          script.id = "custom-script";
-          script.textContent = data["script.js"];
-          document.body.appendChild(script);
-          console.log("✅ JS actualizado dinámicamente.");
-        }
-      });
-    }
+// Cargar assets iniciales desde chrome.storage
+loadAssets();
+
+// Escuchar mensajes para recargar assets
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "reloadAssets") {
+    loadAssets();
+    sendResponse({ success: true });
+  }
+  return true;
+});
+
+// Función para cargar/recargar assets
+function loadAssets() {
+  chrome.storage.local.get(["styles.css", "script.js"], (data) => {
+    // Actualizar CSS
+    updateStyle(data["styles.css"]);
+
+    // Actualizar JS
+    updateScript(data["script.js"]);
   });
+}
+
+function updateStyle(cssContent) {
+  if (!cssContent) return;
+
+  let style = document.getElementById("custom-style");
+  if (style) {
+    style.textContent = cssContent;
+  } else {
+    style = document.createElement("style");
+    style.id = "custom-style";
+    style.textContent = cssContent;
+    document.head.appendChild(style);
+  }
+}
+
+function updateScript(jsContent) {
+  if (!jsContent) return;
+
+  let script = document.getElementById("custom-script");
+  if (script) {
+    script.remove();
+  }
+
+  script = document.createElement("script");
+  script.id = "custom-script";
+  script.textContent = jsContent;
+  document.body.appendChild(script);
+}
