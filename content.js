@@ -1,13 +1,19 @@
-chrome.storage.local.get(["script.js", "styles.css"], (data) => {
-  if (data["script.js"]) {
-    const script = document.createElement("script");
-    script.textContent = data["script.js"];
-    document.body.appendChild(script);
+chrome.storage.local.get(['script.js'], (result) => {
+  if (result['script.js']) {
+    const script = document.createElement('script');
+    script.textContent = result['script.js'];
+    document.head.appendChild(script);
+  } else {
+    // Cargar versión empaquetada
+    const script = document.createElement('script');
+    script.src = chrome.runtime.getURL('script.js');
+    document.head.appendChild(script);
   }
+});
 
-  if (data["styles.css"]) {
-    const style = document.createElement("style");
-    style.textContent = data["styles.css"];
-    document.head.appendChild(style);
-  }
+// Código para cargar CSS actualizado
+chrome.storage.local.get(['styles.css'], (result) => {
+  const style = document.createElement('style');
+  style.textContent = result['styles.css'] || '';
+  document.head.appendChild(style);
 });

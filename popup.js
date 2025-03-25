@@ -5,15 +5,13 @@ document.getElementById("updateButton").addEventListener("click", async () => {
 
   try {
     const response = await chrome.runtime.sendMessage({
-      action: "updateExtension",
+      action: "updateExtension", // ✔️ Envía un mensaje al background.js
     });
 
-    if (response && response.success) {
-      alert(
-        "✅ Extensión actualizada correctamente. Por favor, recarga las pestañas donde la uses."
-      );
+    if (response?.success) {
+      alert("✅ Extensión actualizada. Recarga las pestañas donde la uses.");
     } else {
-      alert("ℹ️ No hay actualizaciones disponibles o ocurrió un error.");
+      alert("ℹ️ No hay actualizaciones o ocurrió un error.");
     }
   } catch (error) {
     console.error("Error al actualizar:", error);

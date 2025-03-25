@@ -7,99 +7,87 @@ const FILES_TO_UPDATE = {
     "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/styles.css",
 };
 
-async function checkForUpdate() {
+// ================== Lógica de Actualización ==================
+async function checkForUpdates() {
   try {
-    console.log("🔍 Verificando actualizaciones...");
+    console.log('🔍 Verificando actualizaciones...');
+    
+    // Obtener versión local
+    const localManifest = chrome.runtime.getManifest();
+    const currentVersion = localManifest.version;
 
-    const versionData = await fetchJSON(VERSION_URL);
-    const currentVersion = await getCurrentVersion();
-    const latestVersion = versionData.version;
+    // Obtener versión remota
+    const remoteManifest = await fetch(VERSION_URL).then(res => res.json());
+    const latestVersion = remoteManifest.version;
 
     if (currentVersion !== latestVersion) {
-      console.log(`🚀 Nueva versión detectada: ${latestVersion}`);
+      console.log(`🚀 Nueva versión disponible: ${latestVersion}`);
       await updateFiles();
-      await saveVersion(latestVersion);
-      notifyContentScripts();
-    } else {
-      console.log("✅ La extensión está actualizada.");
+      return true;
     }
+    console.log('✅ Ya tienes la última versión');
+    return false;
   } catch (error) {
-    console.error("❌ Error al verificar la actualización:", error);
+    console.error('❌ Error al verificar actualizaciones:', error);
+    throw error;
   }
 }
 
-// 📌 Obtiene la versión guardada en `chrome.storage`
-function getCurrentVersion() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(["extension_version"], (result) => {
-      resolve(result.extension_version || "0.0.0");
-    });
-  });
-}
-
-// 📌 Guarda la nueva versión en `chrome.storage`
-function saveVersion(version) {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ extension_version: version }, () => resolve());
-  });
-}
-
-// 📌 Descarga un archivo y lo guarda en `chrome.storage`
-async function updateFile(fileName, fileUrl) {
-  try {
-    const response = await fetch(fileUrl);
-    if (!response.ok) throw new Error(`Error al descargar ${fileUrl}`);
-    const content = await response.text();
-
-    await chrome.storage.local.set({ [fileName]: content });
-    console.log(`✅ ${fileName} actualizado.`);
-  } catch (error) {
-    console.error(`❌ Error al actualizar ${fileName}:`, error);
-  }
-}
-
-// 📌 Descarga y guarda todos los archivos
 async function updateFiles() {
-  await Promise.all(
-    Object.entries(FILES_TO_UPDATE).map(([fileName, fileUrl]) =>
-      updateFile(fileName, fileUrl)
-    )
-  );
+  try {
+    console.log('⬇️ Descargando archivos actualizados...');
+    
+    for (const [fileName, fileUrl] of Object.entries(FILES_TO_UPDATE)) {
+      const content = await fetch(fileUrl).then(res => res.text());
+      await saveFileToStorage(fileName, content);
+    }
+  } catch (error) {
+    console.error('❌ Error al actualizar archivos:', error);
+    throw error;
+  }
 }
 
-// 📌 Envía un mensaje a los scripts activos para que recarguen los archivos
-function notifyContentScripts() {
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: reloadUpdatedFiles,
-      });
+function saveFileToStorage(fileName, content) {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ [fileName]: content }, () => {
+      console.log(`💾 ${fileName} guardado en storage`);
+      resolve();
     });
   });
 }
 
-// 📌 Función que recargará los archivos en los scripts activos
-function reloadUpdatedFiles() {
-  chrome.storage.local.get(["script.js", "styles.css"], (data) => {
-    if (data["script.js"]) {
-      const script = document.createElement("script");
-      script.textContent = data["script.js"];
-      document.body.appendChild(script);
-    }
+// ================== Comunicación con el Botón ==================
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "updateExtension") {
+    (async () => {
+      try {
+        const updated = await checkForUpdates();
+        sendResponse({ 
+          success: true, 
+          updated: updated,
+          message: updated ? "Extensión actualizada" : "Ya tienes la última versión"
+        });
+      } catch (error) {
+        sendResponse({ 
+          success: false, 
+          error: error.message 
+        });
+      }
+    })();
+    return true; // Mantiene el canal abierto para sendResponse
+  }
+});
 
-    if (data["styles.css"]) {
-      const style = document.createElement("style");
-      style.textContent = data["styles.css"];
-      document.head.appendChild(style);
-    }
-  });
-}
+// ================== Actualización Automática Periódica ==================
+// Verifica cada 24 horas (opcional)
+const ALARM_NAME = 'auto-update-check';
+chrome.alarms.create(ALARM_NAME, { periodInMinutes: 24 * 60 });
 
-// 📌 Obtiene un JSON remoto
-async function fetchJSON(url) {
-  const response = await fetch(url);
-  return response.json();
-}
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === ALARM_NAME) {
+    checkForUpdates().catch(console.error);
+  }
+});
 
-checkForUpdate();
+// Verificar al iniciar
+checkForUpdates().catch(console.error);
