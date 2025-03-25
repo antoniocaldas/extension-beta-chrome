@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Composer IA",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Una extensión para corregir la ortografía y generar tags.",
   "action": {
       "default_popup": "popup.html",
@@ -12,9 +12,13 @@
       "activeTab",
       "scripting"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "https://sandbox.elcomercio.arcpublishing.com/*",
     "https://elcomercio.arcpublishing.com/*",
-    "https://api.elcomercio.arcpublishing.com/*"
+    "https://api.elcomercio.arcpublishing.com/*",
+    "https://raw.githubusercontent.com/*"
   ]
 }

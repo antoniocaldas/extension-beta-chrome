@@ -8,7 +8,7 @@ const VERSION_URL =
 const FILES_TO_UPDATE = {
   "script.js":
     "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/script.js",
-  "style.css":
+  "styles.css":
     "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/styles.css",
   "popup.html":
     "https://raw.githubusercontent.com/antoniocaldas/extension-beta-chrome/refs/heads/main/popup.html",
@@ -92,8 +92,6 @@ async function updateFiles() {
       console.log(`🔽 Obteniendo nueva versión de ${fileName}...`);
       await updateFile(fileName, fileUrl);
     }
-
-    reloadExtension();
   } catch (error) {
     console.error("❌ Error al actualizar archivos:", error);
   }
