@@ -45,7 +45,7 @@ body {
 
 .header-brand img {
   width: 100%;
-  height: 200px;
+  height: 80px;
   object-fit: contain;
 }
 
@@ -236,4 +236,10 @@ textarea,
 
 .suggested-news-link {
   color: #3da9b5;
+}
+.update-button {
+  padding: 20px;
+  color: #fff;
+  background-color: #3477db;
+  font-size: 16px;
 }
