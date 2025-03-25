@@ -238,11 +238,11 @@ textarea,
   color: #3da9b5;
 }
 .update-button {
-  padding: 20px;
+  padding: 10px;
   color: #fff;
   background-color: #3477db;
   font-size: 16px;
-  font-weight: 500;
-  border-radius: 50px;
+  font-weight: 700;
+  border-radius: 80px;
   border: 1px solid #3477db;
 }
